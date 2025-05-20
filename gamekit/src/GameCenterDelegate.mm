@@ -430,7 +430,7 @@
 		memcpy(bytes, bitmap, size);
 		// validate and push to lua image table
 		if (dmBuffer::ValidateBuffer(buffer) == dmBuffer::RESULT_OK) {
-			dmScript::LuaHBuffer luabuffer = { buffer, true };
+			dmScript::LuaHBuffer luabuffer(buffer, dmScript::OWNER_LUA);
 
 			lua_newtable(L); // create lua table for image
 			dmScript::PushBuffer(L, luabuffer);
