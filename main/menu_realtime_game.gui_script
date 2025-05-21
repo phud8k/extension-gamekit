@@ -83,7 +83,7 @@ function on_message(self, message_id, message, sender)
 end
 
 function on_input(self, action_id, action)
-	if is_txt_selected == true and action_id == hash("type") and action.repeated == false then
+	if is_txt_selected == true and action_id == hash("type") and not action.repeated then
 		--print(">menu_save_game< action.text = " .. action.text)
 		txt_string = txt_string .. action.text
 		local length = string.len(txt_string)

@@ -75,7 +75,7 @@ end
 -- end
 
 function on_input(self, action_id, action)
-	if is_txt_selected == true and action_id == hash("type") and action.repeated == false then
+	if is_txt_selected == true and action_id == hash("type") and not action.repeated then
 		--print(">menu_scores.gui_script< action.text = " .. action.text)
 		-- string.gsub (string, pattern, repl [, n])  -- https://www.lua.org/manual/5.1/manual.html#pdf-string.gsub
 		-- only allow number input text
