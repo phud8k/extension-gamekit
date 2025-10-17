@@ -59,6 +59,7 @@
             // context is an optional parameter, so no error if no context parameter sent
             lua_settop(L, 0); // clear the whole stack
 
+            /* deprecated way to submit score
             GKScore *scoreReporter = [[GKScore alloc] initWithLeaderboardIdentifier:leaderboardID];
             scoreReporter.value = score;
             scoreReporter.context = context;
@@ -76,6 +77,26 @@
                 }
             }];
             [scoreReporter release];
+            */
+            // Updated way to submit score using GKLeaderboard
+            [GKLeaderboard submitScore:score
+                               context:context
+                                 player:[GKLocalPlayer localPlayer]
+                     leaderboardIDs:@[leaderboardID]
+                     completionHandler:^(NSError *error) {
+                const char *description = nil;
+                if (error) {
+                    description = [[self.gameCenterDelegatePtr stringAppendErrorDescription:[error localizedDescription]
+                        errorCode:[error code]] UTF8String];
+                    sendGameCenterCallbackLuaErrorEvent(L, luaCallbackRef, luaSelfRef, [error code], description);
+                    NSLog(@"Game Center: Failed to submit score %@ to leaderboard %@: %@", @(score), leaderboardID, error);
+                } else {
+                    description = "Score has been sent to game center leaderboard";
+                    sendGameCenterCallbackLuaSuccessEvent(L, luaCallbackRef, luaSelfRef, description);
+                    NSLog(@"Game Center: Successfully submitted score %@ to leaderboard %@", @(score), leaderboardID);
+                }
+            }];
+
 //////////// command = setDefaultLeaderboardID 
         } else if(strcmp(command, "setDefaultLeaderboardID") == 0) {
             int luaCallbackRef = getTemporaryGameCenterCallbackLuaRef(L);
